@@ -1,3 +1,4 @@
+import Echo from 'laravel-echo';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import openSocket from 'socket.io-client';
@@ -6,8 +7,18 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+window.Pusher = require('pusher-js');
+
 const socket = openSocket('http://localhost:8080');
 socket.on('mailSend', data => console.log(data));
+
+const echo = new Echo({
+  broadcaster: 'pusher',
+  key: '88c938ee6e49ac3dac8f',
+  cluster: 'ap2',
+  encrypted: true
+});
+echo.channel('mailSend').listen('EmailSend', data => console.log(data.data));
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
