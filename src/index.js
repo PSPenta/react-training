@@ -9,8 +9,13 @@ import * as serviceWorker from './serviceWorker';
 
 window.Pusher = require('pusher-js');
 
-const socket = openSocket('http://localhost:8080');
-socket.on('mailSend', data => console.log(data));
+const socket = openSocket('http://localhost:8080', {
+  transports: ['websocket'],
+});
+socket.on('mailSend', data => {
+  console.log('success', data);
+  socket.emit('msgSend', { 'success': 'Client to Server emit.' });
+});
 
 const echo = new Echo({
   broadcaster: 'pusher',
